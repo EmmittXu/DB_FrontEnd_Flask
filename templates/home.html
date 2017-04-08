@@ -1,0 +1,202 @@
+<html>
+<head>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+</head>
+<style>
+body{
+  font-size: 15pt;
+  font-family: arial;
+}
+</style>
+
+<body>
+<p>Check players that belong to a country, a league or a team</p>
+<form action={{url_for('country_dd')}} method='POST'>
+  <select name="which_country" onChange='{this.form.submit();}'>
+    {% if countries|length >1 %}
+    <option value="">Select a country</option>
+    <option value="all countries">Select all</option>
+    {% endif %}
+    {% for country in countries %}
+    <option value="{{country}}">{{country}}</option>
+    {% endfor %}
+  </select>
+</form>
+
+        <form action={{url_for('league_dd')}} method="POST">
+            <select name="which_league" onChange='{this.form.submit();}'>
+                <option value="">Choose a league</option>
+                {% for league in leagues %}
+                <option value="{{league}}">{{league}}</option>
+                {% endfor %}
+            </select>
+          </form>
+
+
+
+    <form action={{url_for('team_dd')}} method="POST">
+      <select name="which_team" onChange='{this.form.submit();}'>
+        <option value="">Choose a team</option>
+        {% for team in teams %}
+        <option value="{{team}}">{{team}}</option>
+        {% endfor %}
+      </select>
+    </form>
+
+    <form action={{url_for('home')}} methods=['POST', 'GET']
+      <select name="reset" onChange='{this.form.submit();}'>
+        <button  type="submit">Reset</button>
+      </select>
+    </form>
+
+
+{% if players|length>0 %}
+    <table border=1>
+        <thead>
+            <td>Name</td>
+            <td>Rating</td>
+            <td>Goals</td>
+            <td>Birthday</td>
+         </thead>
+    {% for player in players %}
+      <tr>
+      {% for att in player %}
+      <td>{{att}}</td>
+      {% endfor %}
+      </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+
+<br>
+<br>
+
+
+<p>Check which player scored the most/least goals in his country and was born before a certain year</p>
+<form action={{url_for('country_top_scorer')}} method='POST'>
+  <select name="which_country">
+    <option value="">Select a country</option>
+    {% for country in countries %}
+    <option value="{{country}}">{{country}}</option>
+    {% endfor %}
+  </select>
+
+    <select name="max/min">
+      <option value="">Choose most or least</option>
+      <option value="max">most</option>
+      <option value="min">least</option>
+    </select>
+    <select name="bd" onChange='{this.form.submit();}'>
+      <option value="">Born before certain year</option>
+      <option value="1980-01-01">1980</option>
+      <option value="1985-01-01">1985</option>
+      <option value="1990-01-01">1990</option>
+      <option value="1995-01-01">1995</option>
+      <option value="2000-01-01">2000</option>
+    </select>
+  </form>
+
+  <form action={{url_for('home')}} methods=['POST', 'GET']
+    <select name="reset" onChange='{this.form.submit();}'>
+      <button  type="submit">Reset</button>
+    </select>
+  </form>
+
+
+{% if scorers|length>0 %}
+  <table border=1>
+      <thead>
+          <td>Name</td>
+          <td>Team</td>
+          <td>League</td>
+          <td>Country</td>
+          <td>Goals</td>
+          <td>Birthday</td>
+       </thead>
+  {% for scorer in scorers %}
+    <tr>
+    {% for att in scorer %}
+    <td>{{att}}</td>
+    {% endfor %}
+    </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<br>
+<br>
+
+
+<p>Check the match history of a team<p>
+<form action={{url_for('champion_teams')}} method="POST">
+  <select name="IsChamp" onChange='{this.form.submit();}'>
+    <option value="">In champions league or not?</option>
+    <option value="in">Yes</option>
+    <option value="not in">No</option>
+  </select>
+</form>
+
+<form action={{url_for('match_history')}} method="POST">
+  <select name="team" >
+    <option value="">Select a team?</option>
+    {% for team in champion_teams %}
+    <option value="{{team}}">{{team}}</option>
+    {% endfor %}
+  </select>
+  <select name="order" onchange='{this.form.submit();}'>
+    <option value="">Order by date</option>
+    <option value="ASC">ASC</option>
+    <option value="DESC">DESC</option>
+  </select>
+</form>
+<form action={{url_for('home')}} methods=['POST', 'GET']
+  <select name="reset" onChange='{this.form.submit();}'>
+    <button  type="submit">Reset</button>
+  </select>
+</form>
+
+  {% if matches|length>0 %}
+  <table border=1>
+      <thead>
+          <td>Match ID</td>
+          <td>Match Date</td>
+          <td>Home Team</td>
+          <td>Home Manager</td>
+          <td>Away Team</td>
+          <td>Away Manager</td>
+          <td>Home goals</td>
+          <td>Away goals</td>
+       </thead>
+  {% for match in matches %}
+    <tr>
+    {% for att in match %}
+    <td>{{att}}</td>
+    {% endfor %}
+    </tr>
+  {% endfor %}
+</table>
+  {% endif %}
+
+    <p><a href ="insert">Insert records</a></p>
+    <p><a href ="delete">Delete records</a></p>
+
+
+    <h1>European soccer database</h1>
+    <p>This database has the following tables:</p>
+    <p>players(pid,prating,pname, pgoal, PK(pid))</p>
+    <p>manager(mid, mname, PK(mid))</p>
+    <p>manages(tid, mid, since, PK(mid, since))</p>
+    <p>country(cid, cname, PK(cid))</p>
+    <p>league(lid, lname, PK(lid))</p>
+    <p>match(mid, mdate, PK(mid))</p>
+    <p>team(tid, tname, PK(tid))</p>
+    <p>belongs_cl(lid, since, PK(lid))</p>
+    <p>belongs_lc(lid, cid, since, PK(lid))</p>
+    <p>belongs_tc(tid, since,PK(tid))</p>
+    <p>belongs_tl(tid, lid since, PK(tid, lid))</p>
+    <p>champions_league(tid, lid, PK(lid))</p>
+    <p>participate(tid, mid, tid2, PK(mid))</p>
+    <p>plays_in(pid, tid, since, PK(pid))</p>
+
+    </body>
+</html>
