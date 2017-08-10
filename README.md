@@ -1,3 +1,5 @@
+#Project for W4111, Introduction to Database, Columbia University.
+
 # DB_FrontEnd_Flask
 A front end web to a soccer database
 To run the server  
